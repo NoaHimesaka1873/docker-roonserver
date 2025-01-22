@@ -8,14 +8,15 @@ Example start:
 
     docker run -d \
       --net=host \
-      -e TZ="Europe/Amsterdam" \
+      -e TZ="Asia/Seoul" \
       -v roon-app:/app \
       -v roon-data:/data \
       -v roon-music:/music \
       -v roon-backups:/backup \
-      steefdebruijn/docker-roonserver:latest
+      ghcr.io/noahimesaka1873/roonserver:latest
   
   * You should set `TZ` to your timezone.
+  * You can set `ROON_VERSION` to 'EARLYACCESS' or 'STABLE' to select the version to download on first run.
   * You can change the volume mappings to local file system paths if you like.
   * You *must* use different folders for `/app` and `/data`.
     The app will not start if they both point to the same folder or volume on your host.
@@ -37,16 +38,16 @@ Example `systemd` service (adapt to your environment):
     TimeoutStopSec=180
     ExecStartPre=-/usr/bin/docker kill %n
     ExecStartPre=-/usr/bin/docker rm -f %n
-    ExecStartPre=/usr/bin/docker pull steefdebruijn/docker-roonserver
+    ExecStartPre=/usr/bin/docker pull ghcr.io/noahimesaka1873/roonserver
     ExecStart=/usr/bin/docker \
       run --name %n \
       --net=host \
-      -e TZ="Europe/Amsterdam" \
+      -e TZ="Asia/Seoul" \
       -v roon-app:/app \
       -v roon-data:/data \
       -v roon-music:/music \
       -v roon-backups:/backup \
-      steefdebruijn/docker-roonserver
+      ghcr.io/noahimesaka1873/roonserver
     ExecStop=/usr/bin/docker stop %n
     Restart=always
     RestartSec=10s
@@ -63,12 +64,12 @@ Example `docker-compose.yaml` (adapt to your environment):
     version: "3.7"
     services:
       docker-roonserver:
-        image: steefdebruijn/docker-roonserver:latest
+        image: ghcr.io/noahimesaka1873/roonserver:latest
         container_name: docker-roonserver
         hostname: docker-roonserver
         network_mode: host
         environment:
-          TZ: "Europe/Amsterdam"
+          TZ: "Asia/Seoul"
         volumes:
           - roon-app:/app
           - roon-data:/data
@@ -134,6 +135,7 @@ I have not tried this myself, I do not use Roon extensions.
 
 ## Version history
 
+  * 2025-01-23: update base image weekly to be up-to-date with security patches and add the ability to select the Roon version to download on first run.
   * 2023-11-03: update base image to 'debian:12-slim', dependency to libicu72
   * 2022-04-12: update base image to 'debian:11-slim'
   * 2022-03-19: Fix download URL, follow redirects on download. Added specific usage scenarios in README.

@@ -19,6 +19,23 @@ if test -f /data/check-for-shared-with-data; then
 fi
 rm -f /app/check-for-shared-with-data
 
+# Check for stable or early access version
+if test -z "$ROON_VERSION"; then
+    echo "ROON_VERSION not set"
+    exit 1
+fi
+
+if test "$ROON_VERSION" = "STABLE"; then
+    ROON_SERVER_URL="http://download.roonlabs.com/builds/RoonServer_linuxx64.tar.bz2"
+    ROON_SERVER_PKG="RoonServer_linuxx64.tar.bz2"
+elif test "$ROON_VERSION" = "EARLYACCESS"; then
+    ROON_SERVER_URL="http://download.roonlabs.com/builds/earlyaccess/RoonServer_linuxx64.tar.bz2"
+    ROON_SERVER_PKG="RoonServer_linuxx64.tar.bz2"
+else
+    echo "ROON_VERSION must be set to 'STABLE' or 'EARLYACCESS'"
+    exit 1
+fi
+
 # Optionally download the app
 cd /app
 if test ! -d RoonServer; then
